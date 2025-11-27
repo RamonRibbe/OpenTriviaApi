@@ -1,0 +1,41 @@
+﻿@page "/"
+@using OpenTriviaApp.Presenters
+@rendermode InteractiveServer
+
+<PageTitle>OpenTrivia 2.0</PageTitle>
+
+<h1>OpenTrivia 2.0</h1>
+
+<p>Welcome to the OpenTrivia 2.0 page!</p>
+<p>Answer each question by pressing one of the answer buttons.<br />
+    The correct answer will be shown in green, the incorrect answer will be shown in red.<br />
+    Press the NextQuestion button for the next Trivia Question.
+    </p>
+
+@inject IOpenTriviaPresenter Presenter
+@code {
+
+    protected override async Task OnInitializedAsync()
+    {
+        await this.Presenter.Init();
+    }
+}
+
+@if (this.Presenter.HasCurrentQuestion)
+{
+    <div>
+        <hr />
+        <p>@this.Presenter.CurrentQuestion!.Text</p>
+        <hr />
+    </div>
+    <div>
+        <div>
+        @foreach (var item in this.Presenter.CurrentQuestion.Answers)
+        {
+            <button @onclick="() => this.Presenter.AnswerQuestion(item.Id)" style="width:200px;height:100px;margin:20px" class="@item.UiClass" disabled="@this.Presenter.CurrentQuestion.IsAnswered">@item.Text</button>
+        }
+        </div>
+        <hr />
+        <button @onclick="() => this.Presenter.NextQuestion()" disabled="@(!this.Presenter.CurrentQuestion.IsAnswered)">Next Trivia Question</button>
+    </div>
+}

@@ -1,0 +1,6 @@
+@OpenTriviaApi_HostAddress = http://localhost:5207
+
+GET {{OpenTriviaApi_HostAddress}}/triviaquestions/
+Accept: application/json
+
+###
