@@ -27,13 +27,22 @@ public class OpenTriviaPresenter : IOpenTriviaPresenter
 
     public async Task Init()
     {
-        this.apiQuestions = await this.apiCaller.GetQuestionsAsync();
+        try
+        {
+            this.apiQuestions = await this.apiCaller.GetQuestionsAsync();
 
-        var rand = new Random();
-        this.apiQuestions = this.apiQuestions
-            .OrderBy(c => rand.Next()).Select(c => c)
-            .ToList();
-        this.NextQuestion();
+            var rand = new Random();
+            this.apiQuestions = this.apiQuestions
+                .OrderBy(c => rand.Next()).Select(c => c)
+                .ToList();
+            this.NextQuestion();
+        }
+        catch (Exception ex)
+        {
+            this.logger.LogError(ex, ex.Message);
+            this.apiQuestions = null;
+            this.CurrentQuestion = null;
+        }
     }
 
     public void AnswerQuestion(int givenAnswerId)

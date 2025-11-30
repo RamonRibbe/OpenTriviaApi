@@ -64,6 +64,22 @@ public class OpenTriviaPresenterTests
     }
 
     [Test]
+    public async Task InitWithExceptionTest()
+    {
+        var loggerMock = Mock.Of<ILogger<OpenTriviaPresenter>>();
+
+        var apiCaller = new Mock<IApiCaller>();
+        apiCaller.Setup(x => x.GetQuestionsAsync())
+            .ThrowsAsync(new Exception());
+
+        IOpenTriviaPresenter sut = new OpenTriviaPresenter(loggerMock, apiCaller.Object);
+
+        await sut.Init();
+
+        Assert.False(sut.HasCurrentQuestion);
+    }
+
+    [Test]
     public async Task NextQuestionTest()
     {
         var loggerMock = Mock.Of<ILogger<OpenTriviaPresenter>>();
